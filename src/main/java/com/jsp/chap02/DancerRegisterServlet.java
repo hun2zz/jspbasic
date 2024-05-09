@@ -28,7 +28,7 @@ public class DancerRegisterServlet extends HttpServlet {
         w.write("</style>\n");
         w.write("</head>\n");
         w.write("<body>\n");
-        w.write("<form action=\"/hello\" method=\"get\" id=\"reg-form\">");
+        w.write("<form action=\"/chap02/dancer/process\" method=\"get\" id=\"reg-form\">");
         w.write("<label># 이름 : <input type=\"text\" name=\"name\"></label>");
         w.write("<label># 크루이름 : <input type=\"text\" name=\"crewName\"></label>");
         w.write("<label># 레벨 :<input type=\"radio\" name=\"danceLevel\" value=\"PROFESSIONAL\"> 프로 <input type=\"radio\" name=\"danceLevel\" value=\"AMATEUR\"> 아마추어 <input type=\"radio\" name=\"danceLevel\" value=\"BEGINNER\"> 초보자 </label>");
