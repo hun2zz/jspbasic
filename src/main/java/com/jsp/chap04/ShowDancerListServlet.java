@@ -1,0 +1,35 @@
+package com.jsp.chap04;
+
+import com.jsp.entity.Dancer;
+import com.jsp.repository.DancerJdbcRepo;
+import com.jsp.repository.DancerMemoryRepo;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+
+//역할 : 댄서 목록 조회 요청을 받아서 데이터베이스에 있는 댄서 정보를 가져온 후
+//      적당한 html을 찾아서 forwarding
+@WebServlet("/chap04/show-list")
+public class ShowDancerListServlet extends HttpServlet {
+    private DancerJdbcRepo repo = DancerJdbcRepo.getInstance();
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        //1. 데이터 베이스에 접근하여 댄서 목록을 가져오기
+        List<Dancer> dancerList = repo.getDancerList();
+//        System.out.println("dancerList = " + dancerList);
+
+        //1-1 jsp 파일에 수송객체에 담아서 보내주기
+        req.setAttribute("dancers", dancerList);
+        //2. jsp 파일 열기
+        RequestDispatcher rv = req.getRequestDispatcher("/WEB-INF/chap04/dancer-list.jsp");
+        rv.forward(req, resp);
+    }
+}
