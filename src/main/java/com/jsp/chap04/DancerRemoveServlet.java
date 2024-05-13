@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/chap04/remove")
 public class DancerRemoveServlet extends HttpServlet {
@@ -23,11 +24,8 @@ public class DancerRemoveServlet extends HttpServlet {
         //클라이언트에서 보낸 url에 붙은 id 값 가져오기.
         String id = req.getParameter("id");
         System.out.println("삭제 대상 id: " + id);
-
-        //db에 삭제 명령
         repo.delete(id);
-
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/WEB-INF/chap04/dancer-list.jsp");
-        requestDispatcher.forward(req, resp);
+        // /chap04/show-list 요청을 자동으로 보냄 ( 리다이렉션)
+        resp.sendRedirect("/chap04/show-list");
     }
 }
