@@ -31,7 +31,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     <ul id="dancer-list">
       <!--  for (Dancer d : dancers)  -->
       <c:forEach var="d" items="${dancers}">
-        <li>
+        <li data-id="${d.id}">
           # 이름: <span class="dancer-name">${d.name}</span>, # 크루명:
           ${d.crewName}, # 레벨: ${d.danceLevel}, # 페이:
           ${d.danceLevel.payPerEvent}원
@@ -41,5 +41,22 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     </ul>
 
     <a href="/chap04/dancer/form">다시 등록하기</a>
+
+    <script>
+      const $ul = document.getElementById("dancer-list");
+
+      $ul.addEventListener(`click`, (e) => {
+        e.preventDefault();
+
+        if (!e.target.matches(`button.del-btn`)) return;
+
+        // 링크 요청 생성
+        if (!confirm(`정말로 삭제하시겠어요?`)) return;
+
+        // id 정보 읽어오기
+        const id = e.target.closest(`li`).dataset.id;
+        window.location.href = `/chap04/remove?id=` + id;
+      });
+    </script>
   </body>
 </html>

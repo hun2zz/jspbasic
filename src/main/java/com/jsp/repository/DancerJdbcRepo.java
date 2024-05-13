@@ -4,10 +4,7 @@ package com.jsp.repository;
 import com.jsp.chap05.Person;
 import com.jsp.entity.Dancer;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +21,11 @@ public class DancerJdbcRepo {
 
 
     private static DancerJdbcRepo repo = new DancerJdbcRepo();
+
     // 싱글톤 구현
-    private DancerJdbcRepo() {}
+    private DancerJdbcRepo() {
+    }
+
     //싱글 객체를 리턴하는 메서드
     public static DancerJdbcRepo getInstance() {
         return repo;
@@ -34,44 +34,44 @@ public class DancerJdbcRepo {
 
     //댄서를 데이터베이스에 저장하는 기능
     public boolean save(Dancer dancer) {
-            // 1. 연결 드라이버 로딩
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
-                Class.forName(driverClassName);
+        // 1. 연결 드라이버 로딩
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            Class.forName(driverClassName);
 
-                //2. 데이터베이스 접속
+            //2. 데이터베이스 접속
 //            Connection conn = DriverManager.getConnection(url, username, password);
 //            System.out.println("conn = " + conn);
 
-                //3. 실행할 SQL 생성
-                String sql = "INSERT INTO tbl_dancer"+ "(name, crew_name, dance_level)"+"VALUES (?,?,?)";
+            //3. 실행할 SQL 생성
+            String sql = "INSERT INTO tbl_dancer" + "(name, crew_name, dance_level)" + "VALUES (?,?,?)";
 
-                // 4. SQL 실행 객체 생성
-                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            // 4. SQL 실행 객체 생성
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
-                //5. ? 값 채우기
-                preparedStatement.setString(1, dancer.getName());
-                preparedStatement.setString(2, dancer.getCrewName());
-                preparedStatement.setString(3, dancer.getDanceLevel().toString());
+            //5. ? 값 채우기
+            preparedStatement.setString(1, dancer.getName());
+            preparedStatement.setString(2, dancer.getCrewName());
+            preparedStatement.setString(3, dancer.getDanceLevel().toString());
 
-                //6. 실행 명령
-                // INSERT, UPDATE, DELETE는 모두 같은 명령어를 사용함
-                // select만 다른 명령ㅇ어 사용
+            //6. 실행 명령
+            // INSERT, UPDATE, DELETE는 모두 같은 명령어를 사용함
+            // select만 다른 명령ㅇ어 사용
 
-                preparedStatement.executeUpdate();
-                return true;
+            preparedStatement.executeUpdate();
+            return true;
 
-                //7. 데이터베이스 연결 해제
+            //7. 데이터베이스 연결 해제
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     //댄서 리스트를 반환하는 기능
 
     public List<Dancer> getDancerList() {
-        try (Connection conn = DriverManager.getConnection(url, username, password)){
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
             Class.forName(driverClassName);
 
             String sql = "SELECT * FROM tbl_dancer";
@@ -94,6 +94,7 @@ public class DancerJdbcRepo {
                 String danceLevel = rs.getString("dance_level");
 
                 Dancer person = new Dancer();
+                person.setId(id);
                 person.setName(name);
                 person.setCrewName(crewName);
                 person.setDanceLevel(Dancer.DanceLevel.valueOf(danceLevel));
@@ -114,6 +115,18 @@ public class DancerJdbcRepo {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void delete(String id) {
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            Class.forName(driverClassName);
+            String sql = "DELETE FROM tbl_dancer WHERE id = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+
         }
     }
 }
